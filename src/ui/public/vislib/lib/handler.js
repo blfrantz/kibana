@@ -116,6 +116,28 @@ export function VisHandlerProvider(Private) {
     }
 
     /**
+     * Validates ...............
+     *
+     * @private
+     */
+    _dropPartial() {
+      const xAxis = this.categoryAxes[0];
+      const axisConfig = xAxis.axisConfig;
+      const ordered = xAxis.ordered;
+
+      if (ordered && ordered.min && axisConfig.buckets && axisConfig.buckets.noPartial) {
+        this.data.data.series.forEach(seri => {
+          seri.values = seri.values.filter(val => {
+            if (val.x < ordered.min) return false;
+            if (xAxis.addInterval(val.x) > ordered.max.valueOf()) return false;
+            return true;
+          });
+          return seri;
+        });
+      }
+    }
+
+    /**
      * Renders the constructors that create the visualization,
      * including the chart constructor
      *
@@ -132,6 +154,7 @@ export function VisHandlerProvider(Private) {
       selection.selectAll('*').remove();
 
       this._validateData();
+      this._dropPartial();
       this.renderArray.forEach(function (property) {
         if (typeof property.render === 'function') {
           property.render();

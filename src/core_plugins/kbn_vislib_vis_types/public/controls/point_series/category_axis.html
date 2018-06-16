@@ -107,6 +107,20 @@
           </div>
         </div>
       </div>
+      <div class="kuiSideBarSection" ng-if="showBucketOptions">
+        <h6 class="kuiSideBarFormSectionTitle">
+          Buckets
+        </h6>
+
+        <div class="kuiSideBarFormRow">
+          <label class="kuiSideBarFormRow__label" for="categoryAxisShowLabels">
+            Drop Partial
+          </label>
+          <div class="kuiSideBarFormRow__control">
+            <input class="kuiCheckBox" id="categoryAxisShowLabels" type="checkbox" ng-model="vis.params.categoryAxes[0].buckets.noPartial">
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

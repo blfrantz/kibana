@@ -150,6 +150,7 @@ export function VislibVisualizationsPointSeriesProvider(Private) {
         const mouseChartXCoord = event.clientX - self.chartEl.getBoundingClientRect().left;
         const mouseChartYCoord = event.clientY - self.chartEl.getBoundingClientRect().top;
         const wholeBucket = boundData && boundData.x != null;
+        const noPartial = xAxis.axisConfig.buckets ? xAxis.axisConfig.buckets.noPartial : false;
 
         // the min and max that the endzones start in
         const min = drawInverted ? leftEndzone.w : rightEndzone.w;
@@ -165,6 +166,7 @@ export function VislibVisualizationsPointSeriesProvider(Private) {
 
         return {
           wholeBucket: wholeBucket,
+          noPartial: noPartial,
           touchdown: min > xLeft || max < xRight
         };
       }

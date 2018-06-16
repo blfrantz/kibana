@@ -97,6 +97,9 @@ export function VislibLibAxisConfigProvider() {
         if (!this._values.labels.axisFormatter) {
           this._values.labels.axisFormatter = this.data.data.xAxisFormatter || this.data.get('xAxisFormatter');
         }
+        if (axisConfigArgsClone.buckets) {
+          this.buckets = axisConfigArgsClone.buckets;
+        }
       }
 
       if (this.get('type') === 'value') {

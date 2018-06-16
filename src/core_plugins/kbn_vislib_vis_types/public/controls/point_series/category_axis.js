@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { uiModules } from 'ui/modules';
 import vislibValueAxesTemplate from './category_axis.html';
 const module = uiModules.get('kibana');
@@ -13,6 +14,21 @@ module.directive('vislibCategoryAxis', function () {
         { name: 'vertical', value: 90 },
         { name: 'angled', value: 75 },
       ];
+
+      if (_.isUndefined($scope.vis.params.categoryAxes[0].buckets)) {
+        $scope.vis.params.categoryAxes[0].buckets = {
+          noPartial: false
+        };
+      }
+
+      $scope.$watch('vis.aggs', function (aggs) {
+        const xAxis = _.find(aggs, { id: '2' });
+        const xAxisType = _.get(xAxis, '__type.name');
+        $scope.showBucketOptions = xAxisType === 'date_histogram';
+        if (!$scope.showBucketOptions) {
+          $scope.vis.params.categoryAxes[0].buckets.noPartial = false;
+        }
+      });
     }
   };
 });

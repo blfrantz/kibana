@@ -1,7 +1,12 @@
 <p class="vis-tooltip-header bg-info">
-  <i class="fa fa-info-circle vis-tooltip-header-icon"></i>
-  <span class="vis-tooltip-header-text">
-    <%= wholeBucket ? 'Part of this bucket' : 'This area' %>
-    may contain partial data. <br> The selected time range does not fully cover it.
-  </span>
-</p>
+    <i class="fa fa-info-circle vis-tooltip-header-icon"></i>
+    <span class="vis-tooltip-header-text">
+      <% if (noPartial) { %> 
+        This area is in your selected time range but contains partial
+        <br> data which the visual has been configured not to show.
+      <% } else { %> 
+        <%= wholeBucket ? 'Part of this bucket' : 'This area' %>
+        may contain partial data. <br> The selected time range does not fully cover it.
+      <% } %> 
+    </span>
+  </p>
