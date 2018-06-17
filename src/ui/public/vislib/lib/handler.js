@@ -129,15 +129,28 @@ export function VisHandlerProvider(Private) {
       if (axisConfig.buckets && axisConfig.buckets.noPartial) {
         const ordered = xAxis.ordered;
         if (!ordered || !ordered.min) return;
-        if (!this.data.data.series || !this.data.data.series.length) return;
 
-        this.data.data.series.forEach(seri => {
-          seri.values = seri.values.filter(val => {
-            if (val.x < ordered.min) return false;
-            if (xAxis.addInterval(val.x) > ordered.max.valueOf()) return false;
-            return true;
+        let rows = [];
+
+        if (this.data.data.rows) {
+          rows = this.data.data.rows;
+        }
+        else if (this.data.data.series) {
+          rows = [this.data.data];
+        }
+        else {
+          return;
+        }
+
+        rows.forEach(row => {
+          row.series.forEach(seri => {
+            seri.values = seri.values.filter(val => {
+              if (val.x < ordered.min) return false;
+              if (xAxis.addInterval(val.x) > ordered.max.valueOf()) return false;
+              return true;
+            });
+            return seri;
           });
-          return seri;
         });
       }
     }
