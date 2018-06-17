@@ -15,16 +15,20 @@ module.directive('vislibCategoryAxis', function () {
         { name: 'angled', value: 75 },
       ];
 
+      $scope.xAxis = null;
+
       if (_.isUndefined($scope.vis.params.categoryAxes[0].buckets)) {
         $scope.vis.params.categoryAxes[0].buckets = {
           noPartial: false
         };
       }
 
-      $scope.$watch('vis.aggs', function (aggs) {
-        const xAxis = _.find(aggs, { id: '2' });
-        const xAxisType = _.get(xAxis, '__type.name');
-        $scope.showBucketOptions = xAxisType === 'date_histogram';
+      $scope.$watch('vis.aggs', aggs => {
+        $scope.xAxis = _.find(aggs, { id: '2' });
+      });
+
+      $scope.$watch('xAxis.__type.name', name => {
+        $scope.showBucketOptions = name === 'date_histogram';
         if (!$scope.showBucketOptions) {
           $scope.vis.params.categoryAxes[0].buckets.noPartial = false;
         }
