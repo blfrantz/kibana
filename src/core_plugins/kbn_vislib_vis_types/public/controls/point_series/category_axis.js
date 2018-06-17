@@ -24,7 +24,7 @@ module.directive('vislibCategoryAxis', function () {
       }
 
       $scope.$watch('vis.aggs', aggs => {
-        $scope.xAxis = _.find(aggs, { id: '2' });
+        $scope.xAxis = _.find(aggs, { __schema: { title: 'X-Axis' } });
       });
 
       $scope.$watch('xAxis.__type.name', name => {

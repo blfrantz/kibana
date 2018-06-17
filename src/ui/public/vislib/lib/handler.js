@@ -116,7 +116,8 @@ export function VisHandlerProvider(Private) {
     }
 
     /**
-     * Validates ...............
+     * Drops partial buckets from all series in all rows of this.data
+     * if configured by the buckets.noPartial setting in the x-axis config.
      *
      * @private
      */
