@@ -108,6 +108,54 @@ dateHistogramArray.forEach(function (data, i) {
       });
     });
 
+    describe('_dropPartial Method', function () {
+      let origValues;
+      let skipTest;
+
+      beforeEach(function () {
+        // This test only applies to series-type data.
+        if (names[i] in ['series', 'stackedSeries']) {
+          origValues = vis.handler.data.data.series[0].values;
+          skipTest = false;
+        } else {
+          skipTest = true;
+        }
+      });
+
+      it('should remove partial buckets when enabled', function () {
+        if (skipTest) return;
+
+        vis.handler.categoryAxes[0].axisConfig.buckets = {
+          noPartial: true
+        };
+
+        vis.handler.render();
+
+        const values = vis.handler.data.data.series[0].values;
+        expect(values.length).to.be(origValues.length - 2);
+      });
+
+      it('should not remove partial buckets when disabled', function () {
+        if (skipTest) return;
+
+        vis.handler.categoryAxes[0].axisConfig.buckets = {
+          noPartial: false
+        };
+
+        vis.handler.render();
+
+        const values = vis.handler.data.data.series[0].values;
+        expect(values.length).to.be(origValues.length);
+      });
+
+      it('should not remove partial buckets when undefined', function () {
+        if (skipTest) return;
+
+        const values = vis.handler.data.data.series[0].values;
+        expect(values.length).to.be(origValues.length);
+      });
+    });
+
     describe('error Method', function () {
       beforeEach(function () {
         vis.handler.error('This is an error!');
