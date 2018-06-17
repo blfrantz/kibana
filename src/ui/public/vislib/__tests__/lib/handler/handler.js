@@ -111,10 +111,11 @@ dateHistogramArray.forEach(function (data, i) {
     describe('_dropPartial Method', function () {
       let origValues;
       let skipTest;
+      const caseNames = ['series', 'stackedSeries'];
 
       beforeEach(function () {
         // This test only applies to series-type data.
-        if (names[i] in ['series', 'stackedSeries']) {
+        if (caseNames.includes(names[i])) {
           origValues = vis.handler.data.data.series[0].values;
           skipTest = false;
         } else {
