@@ -122,10 +122,15 @@ export function VisHandlerProvider(Private) {
      */
     _dropPartial() {
       const xAxis = this.categoryAxes[0];
+      if (!xAxis) return;
       const axisConfig = xAxis.axisConfig;
-      const ordered = xAxis.ordered;
+      if (!axisConfig) return;
 
-      if (ordered && ordered.min && axisConfig.buckets && axisConfig.buckets.noPartial) {
+      if (axisConfig.buckets && axisConfig.buckets.noPartial) {
+        const ordered = xAxis.ordered;
+        if (!ordered || !ordered.min) return;
+        if (!this.data.data.series || !this.data.data.series.length) return;
+
         this.data.data.series.forEach(seri => {
           seri.values = seri.values.filter(val => {
             if (val.x < ordered.min) return false;
