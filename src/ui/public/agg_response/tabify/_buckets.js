@@ -19,7 +19,7 @@
 
 import _ from 'lodash';
 
-function TabifyBuckets(aggResp, aggParams) {
+function TabifyBuckets(aggResp, aggParams, timeRange) {
   if (_.has(aggResp, 'buckets')) {
     this.buckets = aggResp.buckets;
   } else if (aggResp) {
@@ -39,6 +39,7 @@ function TabifyBuckets(aggResp, aggParams) {
   }
 
   if (this.length && aggParams) this._orderBucketsAccordingToParams(aggParams);
+  if (this.buckets.length && aggParams) this._dropPartials(aggParams, timeRange);
 }
 
 TabifyBuckets.prototype.forEach = function (fn) {
@@ -77,6 +78,18 @@ TabifyBuckets.prototype._orderBucketsAccordingToParams = function (params) {
     this.buckets = ranges.map(range => {
       if (range.mask) return this.buckets.find(el => el.key === range.mask);
       return this.buckets.find(el => this._isRangeEqual(el, range));
+    });
+  }
+};
+
+TabifyBuckets.prototype._dropPartials = function (params, timeRange) {
+  if (params.drop_partials && timeRange && this.buckets.length > 1) {
+    const interval = this.buckets[1].key - this.buckets[0].key;
+
+    this.buckets = this.buckets.filter(bucket => {
+      if (bucket.key < timeRange.gte) return false;
+      if (bucket.key + interval > timeRange.lte) return false;
+      return true;
     });
   }
 };

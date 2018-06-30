@@ -69,6 +69,11 @@ function TabbedAggResponseWriter(aggs, opts) {
   this.root = new TabifyTableGroup();
   this.acrStack = [];
   this.splitStack = [this.root];
+
+  // Extract the time range object if provided
+  if (this.opts.timeRange) {
+    this.timeRange = this.opts.timeRange[Object.keys(this.opts.timeRange)[0]];
+  }
 }
 
 /**
