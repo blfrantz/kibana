@@ -80,4 +80,51 @@ describe('Buckets wrapper', function () {
       expect(buckets).to.have.length(1);
     });
   });
+
+  describe('drop_partial option', function () {
+    const aggResp = {
+      buckets: [
+        { key: 0, value: {} },
+        { key: 100, value: {} },
+        { key: 200, value: {} },
+        { key: 300, value: {} }
+      ]
+    };
+
+    it('drops partial buckets when enabled', function () {
+      const aggParams = {
+        drop_partials: true
+      };
+      const timeRange = {
+        gte: 150,
+        lte: 350
+      };
+      const buckets = new TabifyBuckets(aggResp, aggParams, timeRange);
+      expect(buckets).to.have.length(1);
+    });
+
+    it('keeps partial buckets when disabled', function () {
+      const aggParams = {
+        drop_partials: false
+      };
+      const timeRange = {
+        gte: 150,
+        lte: 350
+      };
+      const buckets = new TabifyBuckets(aggResp, aggParams, timeRange);
+      expect(buckets).to.have.length(4);
+    });
+
+    it('keeps aligned buckets when enabled', function () {
+      const aggParams = {
+        drop_partials: true
+      };
+      const timeRange = {
+        gte: 100,
+        lte: 400
+      };
+      const buckets = new TabifyBuckets(aggResp, aggParams, timeRange);
+      expect(buckets).to.have.length(3);
+    });
+  });
 });

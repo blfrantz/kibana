@@ -39,7 +39,7 @@ function TabifyBuckets(aggResp, aggParams, timeRange) {
   }
 
   if (this.length && aggParams) this._orderBucketsAccordingToParams(aggParams);
-  if (this.buckets.length && aggParams) this._dropPartials(aggParams, timeRange);
+  if (this.length && aggParams && timeRange) this._dropPartials(aggParams, timeRange);
 }
 
 TabifyBuckets.prototype.forEach = function (fn) {
@@ -83,7 +83,7 @@ TabifyBuckets.prototype._orderBucketsAccordingToParams = function (params) {
 };
 
 TabifyBuckets.prototype._dropPartials = function (params, timeRange) {
-  if (params.drop_partials && timeRange && this.buckets.length > 1) {
+  if (params.drop_partials && !this.objectMode && this.buckets.length > 1) {
     const interval = this.buckets[1].key - this.buckets[0].key;
 
     this.buckets = this.buckets.filter(bucket => {
@@ -91,6 +91,8 @@ TabifyBuckets.prototype._dropPartials = function (params, timeRange) {
       if (bucket.key + interval > timeRange.lte) return false;
       return true;
     });
+
+    this.length = this.buckets.length;
   }
 };
 
